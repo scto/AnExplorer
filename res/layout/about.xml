@@ -206,27 +206,6 @@
             android:tag="@string/constant_feedback"
             android:textColor="?attr/actionText" />
 
-        <ImageButton
-            android:id="@+id/rate_button"
-            style="?attr/actionButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:minHeight="48dp"
-            android:src="@drawable/rate"
-            android:tag="@string/constant_rate"
-            android:textColor="?attr/actionText" />
-
-        <ImageButton
-            android:id="@+id/site_button"
-            style="?attr/actionButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:minHeight="48dp"
-            android:src="@drawable/support"
-            android:tag="@string/constant_support"
-            android:textColor="?attr/actionText" />
     </LinearLayout>
 
 </LinearLayout>

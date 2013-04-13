@@ -148,9 +148,6 @@ public class HomeActivity extends SherlockFragmentActivity implements OnFragment
         	if(!auto_login)
             showLoginDialog();	
         }
-        else{
-        	showAdfreeDailog();
-        }
 	}
 	
     private void showAdfreeDailog(){

@@ -2027,28 +2027,6 @@ public class ExplorerOperations {
                 	((Activity) context).startActivity(Intent.createChooser(intent, "Send Feedback"));
                 	dialog.dismiss();
 				}});
-            
-            view = aboutView.findViewById(R.id.rate_button);
-            view.setOnLongClickListener(listener);
-    		view.setOnClickListener(new OnClickListener(){
-				@Override
-				public void onClick(View arg0) {
-                	Intent intentMarket = new Intent(Intent.ACTION_VIEW);
-                	intentMarket.setData(Uri.parse("market://details?id=dev.dworks.apps.anexplorer"));
-                	((Activity) context).startActivity(intentMarket);
-                	dialog.dismiss();
-				}});
-            
-            view = aboutView.findViewById(R.id.site_button);
-            view.setOnLongClickListener(listener);
-    		view.setOnClickListener(new OnClickListener(){
-				@Override
-				public void onClick(View arg0) {
-                	Intent intent = new Intent(Intent.ACTION_VIEW);
-                	intent.setData(Uri.parse("market://details?id=dev.dworks.apps.anexplorer.pro"));
-                	((Activity) context).startActivity(intent);
-                	dialog.dismiss();
-				}});    		
             break;
             
     	case ExplorerOperations.DIALOG_ADFREE:
