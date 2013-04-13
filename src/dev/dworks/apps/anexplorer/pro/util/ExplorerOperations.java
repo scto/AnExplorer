@@ -1,4 +1,4 @@
-package dev.dworks.apps.anexplorer.util;
+package dev.dworks.apps.anexplorer.pro.util;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -86,9 +86,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import dev.dworks.apps.anexplorer.ExplorerActivity;
-import dev.dworks.apps.anexplorer.MyReceiver;
-import dev.dworks.apps.anexplorer.R;
+import dev.dworks.apps.anexplorer.pro.ExplorerActivity;
+import dev.dworks.apps.anexplorer.pro.MyReceiver;
+import dev.dworks.apps.anexplorer.pro.R;
 
 /**
  * @author HaKr
@@ -898,6 +898,7 @@ public class ExplorerOperations {
 				String[] trm = totrm[0].split(" ");
 				tm=Long.parseLong(trm[trm.length-1]);
 				tm=tm*1024;
+				reader.close();
 			} 
 			catch (IOException ex) {
 				ex.printStackTrace();
@@ -2034,21 +2035,10 @@ public class ExplorerOperations {
 				@Override
 				public void onClick(View arg0) {
                 	Intent intentMarket = new Intent(Intent.ACTION_VIEW);
-                	intentMarket.setData(Uri.parse("market://details?id=dev.dworks.apps.anexplorer"));
+                	intentMarket.setData(Uri.parse("market://details?id=dev.dworks.apps.anexplorer.pro"));
                 	((Activity) context).startActivity(intentMarket);
                 	dialog.dismiss();
-				}});
-            
-            view = aboutView.findViewById(R.id.site_button);
-            view.setOnLongClickListener(listener);
-    		view.setOnClickListener(new OnClickListener(){
-				@Override
-				public void onClick(View arg0) {
-                	Intent intent = new Intent(Intent.ACTION_VIEW);
-                	intent.setData(Uri.parse("market://details?id=dev.dworks.apps.anexplorer.pro"));
-                	((Activity) context).startActivity(intent);
-                	dialog.dismiss();
-				}});    		
+				}});  		
             break;
             
     	case ExplorerOperations.DIALOG_ADFREE:
@@ -2071,7 +2061,7 @@ public class ExplorerOperations {
             .setPositiveButton(R.string.constant_support, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                 	Intent intentMarket = new Intent(Intent.ACTION_VIEW);
-                	intentMarket.setData(Uri.parse("market://details?id=dev.dworks.apps.anexplorer.pro"));
+                	intentMarket.setData(Uri.parse("market://details?id=dev.dworks.apps.anexplorer.pro.pro"));
                 	((Activity) context).startActivity(intentMarket);
                 }
             })

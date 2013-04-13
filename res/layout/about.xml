@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
@@ -141,14 +140,6 @@
                         android:src="@drawable/made_with_love" />
 
                 </LinearLayout>
-
-                <com.google.ads.AdView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    ads:adSize="IAB_MRECT"
-                    ads:adUnitId="a14e25123e38970"
-                    ads:loadAdOnCreate="true" />
             </LinearLayout>
         </RelativeLayout>
     </ScrollView>
@@ -215,17 +206,6 @@
             android:minHeight="48dp"
             android:src="@drawable/rate"
             android:tag="@string/constant_rate"
-            android:textColor="?attr/actionText" />
-
-        <ImageButton
-            android:id="@+id/site_button"
-            style="?attr/actionButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:minHeight="48dp"
-            android:src="@drawable/support"
-            android:tag="@string/constant_support"
             android:textColor="?attr/actionText" />
     </LinearLayout>
 

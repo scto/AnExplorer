@@ -51,4 +51,4 @@ License
 
 
 
-[1]: https://play.google.com/store/apps/details?id=dev.dworks.apps.anexplorer
+[1]: https://play.google.com/store/apps/details?id=dev.dworks.apps.anexplorer.pro

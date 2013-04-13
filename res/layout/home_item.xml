@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <dev.dworks.apps.anexplorer.ui.DragGripView
+    <dev.dworks.apps.anexplorer.pro.ui.DragGripView
         android:id="@+id/drag_handle"
         android:layout_width="64dp"
         android:layout_height="@dimen/drag_grip_height"

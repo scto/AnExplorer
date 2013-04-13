@@ -1,9 +1,7 @@
-package dev.dworks.apps.anexplorer;
+package dev.dworks.apps.anexplorer.pro;
 
 import java.io.IOException;
 import java.util.Set;
-
-import dev.dworks.apps.anexplorer.util.ExplorerOperations;
 
 import android.app.WallpaperManager;
 import android.content.BroadcastReceiver;
@@ -13,6 +11,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
+import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations;
 
 public class MyReceiver extends BroadcastReceiver {
 

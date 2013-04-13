@@ -1,4 +1,4 @@
-package dev.dworks.apps.anexplorer;
+package dev.dworks.apps.anexplorer.pro;
 
 import java.util.Locale;
 
@@ -25,8 +25,8 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
-import dev.dworks.apps.anexplorer.util.ExplorerOperations;
-import dev.dworks.apps.anexplorer.util.ExplorerOperations.OnFragmentInteractionListener;
+import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations;
+import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations.OnFragmentInteractionListener;
 
 public class HomeActivity extends SherlockFragmentActivity implements OnFragmentInteractionListener{
 

@@ -1,4 +1,4 @@
-package dev.dworks.apps.anexplorer;
+package dev.dworks.apps.anexplorer.pro;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -20,9 +20,9 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 
-import dev.dworks.apps.anexplorer.util.ExplorerOperations;
-import dev.dworks.apps.anexplorer.util.ExplorerOperations.FileNavList;
-import dev.dworks.apps.anexplorer.util.ExplorerOperations.OnFragmentInteractionListener;
+import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations;
+import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations.FileNavList;
+import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations.OnFragmentInteractionListener;
 
 public class NavigationFragment extends SherlockListFragment {
 	private Context context;

@@ -16,7 +16,11 @@
 
 // THIS IS A BETA! I DON'T RECOMMEND USING IT IN PRODUCTION CODE JUST YET
 
-package dev.dworks.apps.anexplorer.ui;
+package dev.dworks.apps.anexplorer.pro.ui;
+
+import static com.actionbarsherlock.internal.nineoldandroids.view.ViewHelper.setAlpha;
+import static com.actionbarsherlock.internal.nineoldandroids.view.ViewHelper.setTranslationX;
+import static com.actionbarsherlock.internal.nineoldandroids.view.ViewPropertyAnimator.animate;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,10 +38,6 @@ import android.widget.ListView;
 import com.actionbarsherlock.internal.nineoldandroids.animation.Animator;
 import com.actionbarsherlock.internal.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.actionbarsherlock.internal.nineoldandroids.animation.ValueAnimator;
-
-import static com.actionbarsherlock.internal.nineoldandroids.view.ViewHelper.setAlpha;
-import static com.actionbarsherlock.internal.nineoldandroids.view.ViewHelper.setTranslationX;
-import static com.actionbarsherlock.internal.nineoldandroids.view.ViewPropertyAnimator.animate;
 /**
  * A {@link android.view.View.OnTouchListener} that makes the list items in a {@link ListView}
  * dismissable. {@link ListView} is given special treatment because by default it handles touches

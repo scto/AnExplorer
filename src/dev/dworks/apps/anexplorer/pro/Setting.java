@@ -1,7 +1,7 @@
 /**
  * 
  */
-package dev.dworks.apps.anexplorer;
+package dev.dworks.apps.anexplorer.pro;
 
 import java.util.Calendar;
 import java.util.List;
@@ -24,11 +24,8 @@ import android.preference.SwitchPreference;
 
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
-import com.google.ads.AdRequest;
-import com.google.ads.AdSize;
-import com.google.ads.AdView;
 
-import dev.dworks.apps.anexplorer.util.ExplorerOperations;
+import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations;
 
 /**
  * @author HaKr
@@ -46,7 +43,6 @@ public class Setting extends SherlockPreferenceActivity implements OnSharedPrefe
 			R.xml.setting_login, R.xml.setting_advanced, 
 			R.xml.setting_others };
 	
-	private AdView adView;
 	private Integer prefType;
 	
     @SuppressWarnings("deprecation")
@@ -89,20 +85,6 @@ public class Setting extends SherlockPreferenceActivity implements OnSharedPrefe
     	viewType = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(this).getString("ViewPref", "0"));
     	sortType = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(this).getString("SortingTypePref", "1"));
     	sortOrder = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(this).getString("SortingOrderPref", "0"));
-    }
-    
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-
-	    adView = new AdView(this, AdSize.BANNER, "a14e25123e38970");
-        if (showHeader) {	    
-        	setListFooter(adView);
-        }
-        else{
-        	getListView().addFooterView(adView);
-        }
-        adView.loadAd(new AdRequest());	    
-    	super.onConfigurationChanged(newConfig);
     }
     
 	public void changeLang(){

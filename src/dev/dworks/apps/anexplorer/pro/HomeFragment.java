@@ -1,4 +1,4 @@
-package dev.dworks.apps.anexplorer;
+package dev.dworks.apps.anexplorer.pro;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -31,17 +31,14 @@ import com.actionbarsherlock.app.SherlockListPlusFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.google.ads.AdRequest;
-import com.google.ads.AdSize;
-import com.google.ads.AdView;
 import com.mobeta.android.dslv.DragSortController;
 import com.mobeta.android.dslv.DragSortListView;
 
-import dev.dworks.apps.anexplorer.ui.SwipeDismissListViewTouchListener;
-import dev.dworks.apps.anexplorer.ui.SwipeDismissListViewTouchListener.DismissCallbacks;
-import dev.dworks.apps.anexplorer.util.ExplorerOperations;
-import dev.dworks.apps.anexplorer.util.ExplorerOperations.FileNavList;
-import dev.dworks.apps.anexplorer.util.ExplorerOperations.OnFragmentInteractionListener;
+import dev.dworks.apps.anexplorer.pro.ui.SwipeDismissListViewTouchListener;
+import dev.dworks.apps.anexplorer.pro.ui.SwipeDismissListViewTouchListener.DismissCallbacks;
+import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations;
+import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations.FileNavList;
+import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations.OnFragmentInteractionListener;
 
 /**
  * @author HaKr
@@ -61,7 +58,6 @@ public class HomeFragment extends SherlockListPlusFragment {
 	//preferences
 	private boolean isTablet, isPhone;
 	private SharedPreferences.Editor editor;
-	private AdView adView, adViewHeader;
 	private ArrayList<FileNavList> fileListEntries;
 	//private static final String APP_ERROR = "android.intent.action.APP_ERROR";
 	//private static final String EXTRA_BUG_REPORT = "android.intent.extra.BUG_REPORT";
@@ -176,8 +172,6 @@ public class HomeFragment extends SherlockListPlusFragment {
 	 */
 	public void initControls(){		
 		//ads
-        adView = (AdView) view.findViewById(R.id.adView);
-        adViewHeader = new AdView((Activity) context, AdSize.SMART_BANNER, "a14e25123e38970");
 	}
       
 	/**
@@ -375,8 +369,6 @@ public class HomeFragment extends SherlockListPlusFragment {
 	}
 
 	private void showAds(){
-        adView.loadAd(new AdRequest());
-        adViewHeader.loadAd(new AdRequest());
 	}
 	
 	

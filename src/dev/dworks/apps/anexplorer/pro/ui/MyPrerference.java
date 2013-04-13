@@ -1,4 +1,4 @@
-package dev.dworks.apps.anexplorer.ui;
+package dev.dworks.apps.anexplorer.pro.ui;
 import android.content.Context;
 import android.preference.Preference;
 import android.util.AttributeSet;

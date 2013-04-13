@@ -1,4 +1,4 @@
-package dev.dworks.apps.anexplorer.ui;
+package dev.dworks.apps.anexplorer.pro.ui;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -8,7 +8,7 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
-import dev.dworks.apps.anexplorer.R;
+import dev.dworks.apps.anexplorer.pro.R;
 
 public class DragGripView extends View {
     private static final int[] ATTRS = new int[]{

@@ -1,4 +1,4 @@
-package dev.dworks.apps.anexplorer;
+package dev.dworks.apps.anexplorer.pro;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -75,18 +75,16 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
 import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
-import com.google.ads.AdRequest;
-import com.google.ads.AdView;
 
-import dev.dworks.apps.anexplorer.util.ExplorerOperations;
-import dev.dworks.apps.anexplorer.util.ExplorerOperations.CmdListItem;
-import dev.dworks.apps.anexplorer.util.ExplorerOperations.FileList;
-import dev.dworks.apps.anexplorer.util.ExplorerOperations.FileNavList;
-import dev.dworks.apps.anexplorer.util.ExplorerOperations.GalleryFilter;
-import dev.dworks.apps.anexplorer.util.ExplorerOperations.MODES;
-import dev.dworks.apps.anexplorer.util.ExplorerOperations.OnFragmentInteractionListener;
-import dev.dworks.apps.anexplorer.util.ExplorerOperations.SearchFilter;
-import dev.dworks.apps.anexplorer.util.ExplorerOperations.TYPES;
+import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations;
+import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations.CmdListItem;
+import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations.FileList;
+import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations.FileNavList;
+import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations.GalleryFilter;
+import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations.MODES;
+import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations.OnFragmentInteractionListener;
+import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations.SearchFilter;
+import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations.TYPES;
 
 /**
  * @author HaKr
@@ -187,8 +185,6 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 	private ExplorerOperations explorerOperationsSU;
 	private int curNavPosition = -1;
 	private File[] fileList;
-
-	private AdView adView;
 
 	private MODES mode;
 	private TYPES type;
@@ -571,7 +567,6 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 	public void initControls() {
 		initData();
 		// ad
-		adView = (AdView) view.findViewById(R.id.adView);
 		mypath = (TextView) view.findViewById(R.id.pathTitle);
 		titlePane = (RelativeLayout) view.findViewById(R.id.title_pane);
 		empty = (TextView) view.findViewById(R.id.internalEmpty);
@@ -2033,7 +2028,6 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 	}
 
 	private void showAds() {
-		adView.loadAd(new AdRequest());
 	}
 
 	/**
