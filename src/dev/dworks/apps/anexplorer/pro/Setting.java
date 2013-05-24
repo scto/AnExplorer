@@ -25,6 +25,7 @@ import android.preference.SwitchPreference;
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
 
+import dev.dworks.apps.anexplorer.pro.R;
 import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations;
 
 /**
@@ -77,6 +78,11 @@ public class Setting extends SherlockPreferenceActivity implements OnSharedPrefe
         }
         this.onConfigurationChanged(getResources().getConfiguration());
     }
+    
+	@Override
+	public void onStart() {
+		super.onStart();
+	}
     
     public void getPreferences(){
     	themeTypeInt = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(this).getString("ThemePref", "2"));

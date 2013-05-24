@@ -7,15 +7,21 @@
     android:baselineAligned="false"
     android:orientation="vertical" >
 
-    <ListView
-        android:id="@android:id/list"
+    <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:listSelector="@drawable/abs__list_selector_holo_dark"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:scrollbarStyle="outsideOverlay"
-        android:visibility="visible"
-        tools:listitem="@layout/row_item" />
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+
+        <ListView
+            android:id="@android:id/list"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:listSelector="@drawable/abs__list_selector_holo_dark"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:scrollbarStyle="outsideOverlay"
+            android:visibility="visible"
+            tools:listitem="@layout/row_item" />
+    </RelativeLayout>
 
 </LinearLayout>
