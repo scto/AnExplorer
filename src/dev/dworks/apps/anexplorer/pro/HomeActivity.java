@@ -147,12 +147,6 @@ public class HomeActivity extends SherlockFragmentActivity implements OnFragment
             showLoginDialog();	
         }
 	}
-	
-    private void showAdfreeDailog(){
-    	if(preference.getInt("adfreePref", -2) == 1){
-			showSelectedDialog(ExplorerOperations.DIALOG_ADFREE);    		
-    	}
-    }
     
 	private void showSplashScreen(){
         LayoutInflater factory = LayoutInflater.from(this);

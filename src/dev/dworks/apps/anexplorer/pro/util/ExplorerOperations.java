@@ -2096,7 +2096,6 @@ public class ExplorerOperations {
                 	((Activity) context).startActivity(intentMarket);
                 	dismiss();
 				}});
-
 		}
 
 		@Override

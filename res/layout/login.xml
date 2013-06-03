@@ -90,7 +90,6 @@
                         android:text="@string/msg_login" />
                 </LinearLayout>
             </LinearLayout>
-
         </RelativeLayout>
     </ScrollView>
 

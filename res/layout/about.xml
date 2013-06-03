@@ -214,7 +214,6 @@
             android:src="@drawable/rate"
             android:tag="@string/constant_rate"
             android:textColor="?attr/actionText" />
-
     </LinearLayout>
 
 </LinearLayout>

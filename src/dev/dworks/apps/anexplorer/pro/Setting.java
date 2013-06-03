@@ -25,7 +25,6 @@ import android.preference.SwitchPreference;
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
 
-import dev.dworks.apps.anexplorer.pro.R;
 import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations;
 
 /**

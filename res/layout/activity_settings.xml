@@ -24,4 +24,11 @@
             tools:listitem="@layout/row_item" />
     </RelativeLayout>
 
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+    </LinearLayout>
+
 </LinearLayout>
