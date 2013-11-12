@@ -28,7 +28,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockListPlusFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -40,6 +39,7 @@ import dev.dworks.apps.anexplorer.pro.ui.SwipeDismissListViewTouchListener.Dismi
 import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations;
 import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations.FileNavList;
 import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations.OnFragmentInteractionListener;
+import dev.dworks.libs.actionbarplus.SherlockListPlusFragment;
 
 /**
  * @author HaKr
@@ -160,7 +160,7 @@ public class HomeFragment extends SherlockListPlusFragment {
 		super.onDetach();
 		mListener = null;
 	}    
-	
+    
 	/**
 	 * Initialises the controls in the activity content view
 	 */
@@ -360,6 +360,10 @@ public class HomeFragment extends SherlockListPlusFragment {
 	private String fileList2Str(FileNavList fileList) {
 		return fileList.getPath() + "," + fileList.getName() + "," + fileList.getIcon() + ";";
 	}
+
+	private void showAds(){
+	}
+	
 	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -433,6 +437,7 @@ public class HomeFragment extends SherlockListPlusFragment {
         
         public ConfigurationDragSortController() {
             super(getListView(), R.id.drag_handle, DragSortController.ON_DOWN, 0);
+            setRemoveEnabled(false);
         }
 
         @Override
@@ -639,6 +644,7 @@ public class HomeFragment extends SherlockListPlusFragment {
     	iconCache.put(15, R.drawable.usb);
     	iconCache.put(16, R.drawable.hdd);
     	iconCache.put(17, R.drawable.image);
+    	a.recycle();
     }
 	
 	private String format2String(int id){

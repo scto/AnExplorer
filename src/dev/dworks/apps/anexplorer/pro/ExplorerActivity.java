@@ -16,14 +16,14 @@ import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v4.widget.SlidingPaneLayout.PanelSlideListener;
 import android.view.View;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 
 import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations;
 import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations.MODES;
 import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations.OnFragmentInteractionListener;
+import dev.dworks.libs.actionbarplus.SherlockFragmentActivityPlus;
 
-public class ExplorerActivity extends SherlockFragmentActivity implements OnFragmentInteractionListener,
+public class ExplorerActivity extends SherlockFragmentActivityPlus implements OnFragmentInteractionListener,
 	PanelSlideListener{
 	private Context context;
 	private Bundle bundle;
@@ -184,7 +184,9 @@ public class ExplorerActivity extends SherlockFragmentActivity implements OnFrag
 			}
 			else if(action == 3){
 				Intent sendBackIntent = new Intent();
-				sendBackIntent.setData(Uri.fromFile(new File(bundle.getString("file"))));
+				if(null != bundle.getString("file")){
+					sendBackIntent.setData(Uri.fromFile(new File(bundle.getString("file"))));
+				}
 				setResult(RESULT_OK, sendBackIntent);
 				finish();
 			}

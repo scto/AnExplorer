@@ -68,7 +68,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockListPlusFragment;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -78,13 +77,16 @@ import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 
 import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations;
 import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations.CmdListItem;
+import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations.FileComparator;
 import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations.FileList;
 import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations.FileNavList;
 import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations.GalleryFilter;
 import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations.MODES;
 import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations.OnFragmentInteractionListener;
 import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations.SearchFilter;
+import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations.SortType;
 import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations.TYPES;
+import dev.dworks.libs.actionbarplus.SherlockListPlusFragment;
 
 /**
  * @author HaKr
@@ -158,7 +160,7 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 	private boolean showDateModified = false;
 	private boolean showSmallDateModified;
 	private boolean showNavigationPane;
-	private Comparator<File> sortingType;
+	private FileComparator sortingType;
 	private Comparator<CmdListItem> sortingTypeCmd = ExplorerOperations.typeAscendingSU;
 	private String[] imageProjection = { 
 			MediaStore.Images.Media._ID,
@@ -229,6 +231,8 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 			args = getArguments();
 		}
 		super.onCreate(savedInstanceState);
+		initMode();
+		setHasOptionsMenu(true);
 	}
 	
 	@Override
@@ -245,7 +249,7 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 		getSharedPreference();
 		fillBitmapCache();
 		initMode();
-
+		
 		type = ExplorerOperations.isPhone(context) ? TYPES.Phone : TYPES.Tablet;
 		wasPaused = false;
 		scrollStateAll = OnScrollListener.SCROLL_STATE_IDLE;
@@ -263,10 +267,9 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 		if(null != savedInstanceState){
 			String path = savedInstanceState.getString(CURRENT_PATH);
 			currentPath = currentPath != null ? currentPath : "";
-			currentPath = !ExplorerOperations.isEmpty(path) ? path : currentPath;
+			currentPath = !TextUtils.isEmpty(path) ? path : currentPath;
 		}
 		setEmptyText(format2String(R.string.msg_file_not_found));
-		setHasOptionsMenu(true);
 		mAdapter = new ListAdapter(context, itemId);
 		setListAdapter(mAdapter);
 		setListShown(false);
@@ -416,7 +419,8 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 			runSU = hasRootAccess && hasMountWrite && originalPath.equals(ROOT);
 			
 			if(mode == MODES.None){
-				mode = originalPath.equals(ROOT) ? MODES.RootMode : MODES.ExplorerMode;
+				mode = !TextUtils.isEmpty(originalPath) && 
+						originalPath.equals(ROOT) ? MODES.RootMode : MODES.ExplorerMode;
 				if(runSU)
 					explorerOperationsSU = new ExplorerOperations(runSU);
 			}
@@ -544,7 +548,7 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 
 		default:
 			showList(path);
-			unSelectAllFiles(false);
+			//unSelectAllFiles(false);
 			break;
 		}
 	}
@@ -702,7 +706,7 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 	public void search() {
 		fileListState = new ArrayList<Parcelable>();
 		mypath.setText(format2String(R.string.msg_search_results));
-		incomingPath = ExplorerOperations.isEmpty(incomingPath) ? ExplorerOperations.DIR_SDCARD : incomingPath; 
+		incomingPath = TextUtils.isEmpty(incomingPath) ? ExplorerOperations.DIR_SDCARD : incomingPath; 
 		
 		searchTask = new SearchTask();
 		searchTask.execute(incomingPath, queryString);
@@ -779,6 +783,10 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 		ExplorerOperations navFileExplorer = new ExplorerOperations();
 		File[] fileList = listResultFiles;
 
+		if(null == fileList){
+			return;
+		}
+		
 		Arrays.sort(fileList, sortingType);
 		int i = 0;
 		for (File eachFile : fileList) {
@@ -820,7 +828,9 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 		loadListTask = new LoadListTask();
 		clearListAdapter();
 		if (loadListTask.getStatus() == AsyncTask.Status.PENDING) {
-			loadListTask.execute("");
+			try {
+				loadListTask.execute("");
+			} catch (Exception e) { }
 		}
 	}
 
@@ -854,7 +864,7 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 					} catch (NameNotFoundException e) {
 					}
 
-					if (ExplorerOperations.isEmpty(name)) {
+					if (TextUtils.isEmpty(name)) {
 						continue;
 					} else {
 						name = process;
@@ -945,8 +955,8 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 					fileListEntries.add(fileListItem);
 					i++;
 				} while (cursor.moveToNext());
+				cursor.close();
 			}
-			cursor.close();
 		} else {
 			if (canUseSU(currentPath)) {
 				String command = "ls -l " + currentPath;
@@ -974,7 +984,7 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 						fileDateModified = String.format("%tr, %tF", eachFile.lastModified(), eachFile.lastModified());
 						fileSmallDateModified = String.format("%tF",eachFile.lastModified());
 
-						if (!ExplorerOperations.isEmpty(name)) {
+						if (!TextUtils.isEmpty(name)) {
 							icon = newFileExplorer.getFileBasicType();
 							fileAccess = cmdListItem.getPermission().substring(0, 3);
 							size = cmdListItem.getType() == 0 ? "" : Formatter.formatShortFileSize(context, Long.valueOf(String.valueOf(eachFile.length())));
@@ -987,7 +997,7 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 				}
 			} else {
 				fileList = listResultFiles;
-				if (fileList == null && fileList.length == 0) {
+				if (fileList == null || fileList.length == 0) {
 					return null;
 				}
 				Arrays.sort(fileList, sortingType);
@@ -1541,7 +1551,7 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 				return null;
 			}
 		} else {
-			return ExplorerOperations.getThumbnailBitmap2(path);
+			return ExplorerOperations.decodeSampledBitmap(path, 60, 60);
 		}
 
 	}
@@ -1628,6 +1638,9 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 			break;
 
 		default:
+			if(position >= fileListEntries.size()){
+				return;
+			}
 			File file = new File(fileListEntries.get(position).getPath());
 			newFileExplorer.setFile(file);
 			newFileExplorer.setContext(context);
@@ -1672,11 +1685,10 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 	private void openFolder(String folderPath) {
 		cancelTasks();
 		// save state of the list views
-		fileListState.add(isCurrentList ? getListView().onSaveInstanceState() : gridView.onSaveInstanceState());
-/*		if (showNavigationPane && !isSelectFromNavigation) {
-			// NavListState.add(listView_navigation.onSaveInstanceState());
-		}*/
-
+		if(getView() != null){
+			fileListState.add(isCurrentList ? getListView().onSaveInstanceState() : gridView.onSaveInstanceState());	
+		}
+		
 		if (!(mode == MODES.SearchMode) && !multiSelectMode) {
 			clearListAdapter();
 			showList(folderPath);
@@ -1999,9 +2011,8 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 	 */
 	private void unSelectAllFiles(boolean unSelectMode) {
 
-		if (fileListEntries != null) {
+		if (fileListEntries != null && fileListEntries.size() != 0 ) {
 			for (int pos = 0; pos < fileListEntries.size(); pos++) {
-				if(fileListEntries.size() > 0)
 				fileListEntries.get(pos).setSelection(0);
 			}
 
@@ -2060,13 +2071,13 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 
 		if (check) {
 			if (getSelectedFileList().size() == 0
-					&& ExplorerOperations.isEmpty(contextFilePath)) {
+					&& TextUtils.isEmpty(contextFilePath)) {
 				Toast.makeText(context, format2String(R.string.msg_file_not_selected), Toast.LENGTH_SHORT).show();
 				return false;
 			}
 		}
 
-		fileInfo.putString(ExplorerOperations.CONSTANT_PATH, ExplorerOperations.isEmpty(contextFilePath) ? currentPath : contextFilePath);
+		fileInfo.putString(ExplorerOperations.CONSTANT_PATH, TextUtils.isEmpty(contextFilePath) ? currentPath : contextFilePath);
 		fileInfo.putString(ExplorerOperations.CONSTANT_TO_PATH, currentPath);
 		fileInfo.putStringArray(ExplorerOperations.CONSTANT_PATH_LIST,
 				(id == ExplorerOperations.DIALOG_PASTE
@@ -2080,7 +2091,7 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 			break;
 		case WallpaperMode:
 			fileInfo.putBoolean(ExplorerOperations.CONSTANT_MULTI_SELECTION, 
-					ExplorerOperations.isEmpty(contextFilePath) ? multiSelectMode: false);
+					TextUtils.isEmpty(contextFilePath) ? multiSelectMode: false);
 			break;
 		default:
 			break;
@@ -2184,23 +2195,25 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 		hasRootAccess = preference.getBoolean("RootAccessPref", false);
 		hasMountWrite = preference.getBoolean("MounWritePref", false);
 
+		SortType sort_type;
 		switch (Integer.valueOf(sortType)) {
+		case 0:
+			sort_type = sortingOder ? SortType.ALPHA_ASC : SortType.ALPHA_DESC;
+			break;
 		case 1:
-			sortingType = sortingOder ? ExplorerOperations.alphaAscending : ExplorerOperations.alphaDescending;
+			sort_type = sortingOder ? SortType.TYPE_ASC : SortType.TYPE_DESC;
 			break;
 		case 2:
-			sortingType = sortingOder ? ExplorerOperations.typeAscending : ExplorerOperations.typeDescending;
+			sort_type = sortingOder ? SortType.SIZE_ASC : SortType.SIZE_DESC;
 			break;
 		case 3:
-			sortingType = sortingOder ? ExplorerOperations.sizesAscending : ExplorerOperations.sizesDescending;
-			break;
-		case 4:
-			sortingType = sortingOder ? ExplorerOperations.datesAscending : ExplorerOperations.datesDescending;
+			sort_type = sortingOder ? SortType.DATE_ASC : SortType.DATE_DESC;
 			break;
 		default:
-			sortingType = ExplorerOperations.typeAlpha;
+			sort_type = SortType.ALPHA_ASC;
 			break;
 		}
+		sortingType = new FileComparator(sort_type);
 	}
 
 	private String getTitle(MODES mode) {
@@ -2283,7 +2296,8 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 		iconCache.put(10, R.drawable.ppt);
 		iconCache.put(11, R.drawable.xls);
 		iconCache.put(12, R.drawable.html);
-		iconCache.put(14, R.drawable.image);
+		iconCache.put(14, R.drawable.empty_photo);
+		a.recycle();
 	}
 
 	private void fillProcessType() {
@@ -2315,10 +2329,12 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 
 		@Override
 		protected void onPostExecute(List<FileList> result) {
-			setEmptyText(mode == MODES.AppMode ? format2String(R.string.msg_file_not_found) : format2String(R.string.msg_folder_empty));
-			if(isAttached){
-				fillNavData();
-				loadListFinally(result, true);
+			if(null != getView()){
+				setEmptyText(mode == MODES.AppMode ? format2String(R.string.msg_file_not_found) : format2String(R.string.msg_folder_empty));
+				if(isAttached){
+					fillNavData();
+					loadListFinally(result, true);
+				}
 			}
 		}
 	}
@@ -2470,7 +2486,8 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 				if (showStorage && parentFolderSize == 0L) {
 					parentFolderSize = getDirectorySize(new File(currentPath));
 				}
-				if (isCancelled() || position >= fileListEntries.size()) {
+				if (isCancelled() || fileListEntries.size() == 0 
+						|| position >= fileListEntries.size()) {
 					return null;
 				}
 				File eachFile = new File(fileListEntries.get(position).getPath());

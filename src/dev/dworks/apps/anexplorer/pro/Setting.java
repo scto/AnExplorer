@@ -92,6 +92,11 @@ public class Setting extends SherlockPreferenceActivity implements OnSharedPrefe
     	sortOrder = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(this).getString("SortingOrderPref", "0"));
     }
     
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+    	super.onConfigurationChanged(newConfig);
+    }
+    
 	public void changeLang(){
     	Locale locale = new Locale(ExplorerOperations.LANGUAGES_LOCALE[langType]);
     	locale = langType == 0 ? Resources.getSystem().getConfiguration().locale : locale;

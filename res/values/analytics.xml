@@ -7,9 +7,9 @@
     <bool name="ga_autoActivityTracking">true</bool>
     <bool name="ga_reportUncaughtExceptions">true</bool>
 
-    <string name="dev.dworks.apps.anexplorer.pro.HomeActivity">Home</string>
-    <string name="dev.dworks.apps.anexplorer.pro.ExplorerActivity">Explorer</string>
-    <string name="dev.dworks.apps.anexplorer.pro.TutorialActivity">Tutorial</string>
-    <string name="dev.dworks.apps.anexplorer.pro.Setting">Setting</string>
+    <string name="dev.dworks.apps.anexplorer.HomeActivity">Home</string>
+    <string name="dev.dworks.apps.anexplorer.ExplorerActivity">Explorer</string>
+    <string name="dev.dworks.apps.anexplorer.TutorialActivity">Tutorial</string>
+    <string name="dev.dworks.apps.anexplorer.Setting">Setting</string>
 
 </resources>
