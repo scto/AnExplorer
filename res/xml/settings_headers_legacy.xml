@@ -1,70 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:anexplorer="http://schemas.android.com/apk/dev.dworks.apps.anexplorer"
-    xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"  >
+    xmlns:anexplorer="http://schemas.android.com/apk/dev.dworks.apps.anexplorer.pro"  >
 
-    <dev.dworks.apps.anexplorer.ui.MyPrerference
+    <dev.dworks.apps.anexplorer.pro.ui.MyPrerference
         style="@style/MyPreferenceHeader"
-        anexplorer:icon="@drawable/ic_settings_display"
-        android:title="@string/display" >
+        android:title="@string/display"
+        anexplorer:icon="@drawable/ic_settings_display" >
         <intent
             android:action="0"
-            android:targetClass="dev.dworks.apps.anexplorer.Setting"
-            android:targetPackage="dev.dworks.apps.anexplorer" />
-    </dev.dworks.apps.anexplorer.ui.MyPrerference>
-    <dev.dworks.apps.anexplorer.ui.MyPrerference
+            android:targetClass="dev.dworks.apps.anexplorer.pro.Setting"
+            android:targetPackage="dev.dworks.apps.anexplorer.pro" />
+    </dev.dworks.apps.anexplorer.pro.ui.MyPrerference>
+    <dev.dworks.apps.anexplorer.pro.ui.MyPrerference
         style="@style/MyPreferenceHeader"
-        anexplorer:icon="@drawable/ic_settings_preview"
-        android:title="@string/preview" >
+        android:title="@string/preview"
+        anexplorer:icon="@drawable/ic_settings_preview" >
         <intent
             android:action="1"
-            android:targetClass="dev.dworks.apps.anexplorer.Setting"
-            android:targetPackage="dev.dworks.apps.anexplorer" />
-    </dev.dworks.apps.anexplorer.ui.MyPrerference>
-    <dev.dworks.apps.anexplorer.ui.MyPrerference
+            android:targetClass="dev.dworks.apps.anexplorer.pro.Setting"
+            android:targetPackage="dev.dworks.apps.anexplorer.pro" />
+    </dev.dworks.apps.anexplorer.pro.ui.MyPrerference>
+    <dev.dworks.apps.anexplorer.pro.ui.MyPrerference
         style="@style/MyPreferenceHeader"
-        anexplorer:icon="@drawable/ic_settings_sort"
-        android:title="@string/sorting" >
+        android:title="@string/sorting"
+        anexplorer:icon="@drawable/ic_settings_sort" >
         <intent
             android:action="2"
-            android:targetClass="dev.dworks.apps.anexplorer.Setting"
-            android:targetPackage="dev.dworks.apps.anexplorer" />
-    </dev.dworks.apps.anexplorer.ui.MyPrerference>
-    <dev.dworks.apps.anexplorer.ui.MyPrerference
+            android:targetClass="dev.dworks.apps.anexplorer.pro.Setting"
+            android:targetPackage="dev.dworks.apps.anexplorer.pro" />
+    </dev.dworks.apps.anexplorer.pro.ui.MyPrerference>
+    <dev.dworks.apps.anexplorer.pro.ui.MyPrerference
         style="@style/MyPreferenceHeader"
-        anexplorer:icon="@drawable/ic_menu_set"
-        android:title="@string/name_wallpaper" >
+        android:title="@string/name_wallpaper"
+        anexplorer:icon="@drawable/ic_menu_set" >
         <intent
             android:action="3"
-            android:targetClass="dev.dworks.apps.anexplorer.Setting"
-            android:targetPackage="dev.dworks.apps.anexplorer" />
-    </dev.dworks.apps.anexplorer.ui.MyPrerference>
-    <dev.dworks.apps.anexplorer.ui.MyPrerference
+            android:targetClass="dev.dworks.apps.anexplorer.pro.Setting"
+            android:targetPackage="dev.dworks.apps.anexplorer.pro" />
+    </dev.dworks.apps.anexplorer.pro.ui.MyPrerference>
+    <dev.dworks.apps.anexplorer.pro.ui.MyPrerference
         style="@style/MyPreferenceHeader"
-        anexplorer:icon="@drawable/ic_menu_login"
-        android:title="@string/msg_login" >
+        android:title="@string/msg_login"
+        anexplorer:icon="@drawable/ic_menu_login" >
         <intent
             android:action="4"
-            android:targetClass="dev.dworks.apps.anexplorer.Setting"
-            android:targetPackage="dev.dworks.apps.anexplorer" />
-    </dev.dworks.apps.anexplorer.ui.MyPrerference>
-    <dev.dworks.apps.anexplorer.ui.MyPrerference
+            android:targetClass="dev.dworks.apps.anexplorer.pro.Setting"
+            android:targetPackage="dev.dworks.apps.anexplorer.pro" />
+    </dev.dworks.apps.anexplorer.pro.ui.MyPrerference>
+    <dev.dworks.apps.anexplorer.pro.ui.MyPrerference
         style="@style/MyPreferenceHeader"
-        anexplorer:icon="@drawable/ic_settings_advanced"
-        android:title="@string/advanced" >
+        android:title="@string/advanced"
+        anexplorer:icon="@drawable/ic_settings_advanced" >
         <intent
             android:action="5"
-            android:targetClass="dev.dworks.apps.anexplorer.Setting"
-            android:targetPackage="dev.dworks.apps.anexplorer" />
-    </dev.dworks.apps.anexplorer.ui.MyPrerference>
-    <dev.dworks.apps.anexplorer.ui.MyPrerference
+            android:targetClass="dev.dworks.apps.anexplorer.pro.Setting"
+            android:targetPackage="dev.dworks.apps.anexplorer.pro" />
+    </dev.dworks.apps.anexplorer.pro.ui.MyPrerference>
+    <dev.dworks.apps.anexplorer.pro.ui.MyPrerference
         style="@style/MyPreferenceHeader"
-        anexplorer:icon="@drawable/ic_settings_others"
-        android:title="@string/others" >
+        android:title="@string/others"
+        anexplorer:icon="@drawable/ic_settings_others" >
         <intent
             android:action="6"
-            android:targetClass="dev.dworks.apps.anexplorer.Setting"
-            android:targetPackage="dev.dworks.apps.anexplorer" />
-    </dev.dworks.apps.anexplorer.ui.MyPrerference>
+            android:targetClass="dev.dworks.apps.anexplorer.pro.Setting"
+            android:targetPackage="dev.dworks.apps.anexplorer.pro" />
+    </dev.dworks.apps.anexplorer.pro.ui.MyPrerference>
 
 </PreferenceScreen>

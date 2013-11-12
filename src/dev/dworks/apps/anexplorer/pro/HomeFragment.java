@@ -10,8 +10,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.format.Formatter;
@@ -361,10 +359,6 @@ public class HomeFragment extends SherlockListPlusFragment {
 		return fileList.getPath() + "," + fileList.getName() + "," + fileList.getIcon() + ";";
 	}
 
-	private void showAds(){
-	}
-	
-	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 	    inflater.inflate(R.menu.options_home, menu);

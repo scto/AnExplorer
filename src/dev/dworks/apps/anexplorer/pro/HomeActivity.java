@@ -36,7 +36,6 @@ import dev.dworks.libs.actionbartoggle.ActionBarToggle;
 public class HomeActivity extends SherlockFragmentActivityPlus implements OnFragmentInteractionListener{
 
 	private Context context;
-	private Dialog splashScreenDialog;
 	private boolean loginSuccess = false;
 	
 	//preferences
@@ -174,34 +173,6 @@ public class HomeActivity extends SherlockFragmentActivityPlus implements OnFrag
     		showLoginDialog();
     	}
 	}
-	
-    private void showAdfreeDailog(){
-    	if(preference.getInt("adfreePref", -2) == 1){
-			showSelectedDialog(ExplorerOperations.DIALOG_ADFREE);    		
-    	}
-    }
-    
-	private void showSplashScreen(){
-        LayoutInflater factory = LayoutInflater.from(this);
-        final View aboutView = factory.inflate(R.layout.splash, null);
-        splashScreenDialog = new Dialog(this, R.style.Theme_Dailog_Splash);
-        splashScreenDialog.setContentView(aboutView);
-        splashScreenDialog.show();
-
-        Thread splashTread = new Thread() {
-            @Override
-            public void run() {
-            	try {
-            		sleep(3000);
-				} catch (Exception e) { }
-				finally {
-					splashScreenDialog.dismiss();
-			        showTutorial();
-                }
-            }
-        };
-        splashTread.start();        
-    }
     
 	private void showLoginDialog(){
     	final boolean passwordSet = !TextUtils.isEmpty(this.password);
@@ -290,13 +261,6 @@ public class HomeActivity extends SherlockFragmentActivityPlus implements OnFrag
 			}});
     }
     	
-    private void showTutorial() {
-		if(preference.getInt("tutorialPref", -1) == -1){
-	    	Intent intent = new Intent(HomeActivity.this, TutorialActivity.class);
-	    	startActivity(intent);
-		}
-	}
-
 	/**
      * @param id
      */
