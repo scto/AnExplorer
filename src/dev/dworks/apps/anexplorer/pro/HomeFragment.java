@@ -15,6 +15,9 @@ import android.preference.PreferenceManager;
 import android.text.format.Formatter;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,9 +29,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.mobeta.android.dslv.DragSortController;
 import com.mobeta.android.dslv.DragSortListView;
 
@@ -37,13 +37,13 @@ import dev.dworks.apps.anexplorer.pro.ui.SwipeDismissListViewTouchListener.Dismi
 import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations;
 import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations.FileNavList;
 import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations.OnFragmentInteractionListener;
-import dev.dworks.libs.actionbarplus.SherlockListPlusFragment;
+import dev.dworks.libs.actionbarplus.app.ActionBarListFragment;
 
 /**
  * @author HaKr
  *
  */
-public class HomeFragment extends SherlockListPlusFragment {
+public class HomeFragment extends ActionBarListFragment {
 	
 	//private static final String TAG = "Explorer";
 	private SparseIntArray iconCache = new SparseIntArray();
@@ -85,7 +85,7 @@ public class HomeFragment extends SherlockListPlusFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		view = inflater.inflate(R.layout.fragment_home, container, false);
-        context = this.getSherlockActivity();
+        context = getActionBarActivity();
 
 		isPhone = ExplorerOperations.isPhone(context);
 		isTablet = !isPhone && ExplorerOperations.isTablet(context);
@@ -158,7 +158,7 @@ public class HomeFragment extends SherlockListPlusFragment {
 		super.onDetach();
 		mListener = null;
 	}    
-    
+	
 	/**
 	 * Initialises the controls in the activity content view
 	 */
@@ -359,6 +359,7 @@ public class HomeFragment extends SherlockListPlusFragment {
 		return fileList.getPath() + "," + fileList.getName() + "," + fileList.getIcon() + ";";
 	}
 
+	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 	    inflater.inflate(R.menu.options_home, menu);
@@ -386,24 +387,24 @@ public class HomeFragment extends SherlockListPlusFragment {
 	            break;
 	        case R.id.menu_edit:
 	        	isEditMode = true;
-	        	getSherlockActivity().supportInvalidateOptionsMenu();
+	        	getActionBarActivity().supportInvalidateOptionsMenu();
 	        	setEditMode();
 	            break;
 	        case R.id.menu_cancel:
 	        	isEditMode = false;
-	        	getSherlockActivity().supportInvalidateOptionsMenu();
+	        	getActionBarActivity().supportInvalidateOptionsMenu();
 	        	removeEditMode();
 	        	clearEditMode();
 	            break;
 	        case R.id.menu_done:
 	        	isEditMode = false;
-	        	getSherlockActivity().supportInvalidateOptionsMenu();
+	        	getActionBarActivity().supportInvalidateOptionsMenu();
 	        	removeEditMode();
 	        	saveEditMode();	        	
 	            break;	      
 	        case R.id.menu_reset:
 	        	isEditMode = false;
-	        	getSherlockActivity().supportInvalidateOptionsMenu();
+	        	getActionBarActivity().supportInvalidateOptionsMenu();
 	        	removeEditMode();
 	        	resetEditMode();
 	            break;	            

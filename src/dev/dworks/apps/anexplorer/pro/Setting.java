@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -15,23 +16,25 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
-
-import com.actionbarsherlock.app.SherlockPreferenceActivity;
-import com.actionbarsherlock.view.MenuItem;
-
+import android.view.MenuItem;
+import android.view.Window;
 import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations;
+import dev.dworks.libs.actionbarplus.misc.Utils;
 
 /**
  * @author HaKr
  * 
  */
-public class Setting extends SherlockPreferenceActivity implements OnSharedPreferenceChangeListener {
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+public class Setting extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 	
 	private Integer themeType, themeTypeInt, themeTypeOrig, langType, langTypeOrig,
 					viewTypeOrig, viewType, sortOrder, sortOrderOrig, sortType, sortTypeOrig;
@@ -58,8 +61,14 @@ public class Setting extends SherlockPreferenceActivity implements OnSharedPrefe
   
         super.onCreate(savedInstanceState);
         changeLang();      
-    	this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    	this.getSupportActionBar().setTitle(getResources().getString(R.string.constant_setting));         
+        if(Utils.hasHoneycomb()){
+        	try {
+            	getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
+            	getActionBar().setDisplayHomeAsUpEnabled(true);
+            	getActionBar().setTitle(getResources().getString(R.string.constant_setting));				
+			} catch (Exception e) {
+			}
+        }         
 
         if(!showHeader){
             setContentView(R.layout.activity_settings);
@@ -91,12 +100,7 @@ public class Setting extends SherlockPreferenceActivity implements OnSharedPrefe
     	sortType = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(this).getString("SortingTypePref", "1"));
     	sortOrder = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(this).getString("SortingOrderPref", "0"));
     }
-    
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-    	super.onConfigurationChanged(newConfig);
-    }
-    
+        
 	public void changeLang(){
     	Locale locale = new Locale(ExplorerOperations.LANGUAGES_LOCALE[langType]);
     	locale = langType == 0 ? Resources.getSystem().getConfiguration().locale : locale;

@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="dev.dworks.apps.anexplorer.pro"
     android:installLocation="auto"
-    android:versionCode="29"
-    android:versionName="1.8" >
+    android:versionCode="33"
+    android:versionName="1.9" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -12,12 +12,14 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
     <uses-permission android:name="android.permission.SET_WALLPAPER" />
+    <uses-permission android:name="android.permission.ACCESS_SUPERUSER" />
 
     <uses-feature
         android:name="android.hardware.touchscreen"
         android:required="false" />
 
     <application
+        android:name="AnExplorer"
         android:allowBackup="false"
         android:description="@string/app_about_info"
         android:icon="@drawable/ic_launcher"
@@ -44,6 +46,9 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="dev.dworks.apps.anexplorer.pro.HomeActivity" />
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
         </activity>
 
         <!-- Explorer -->
@@ -79,10 +84,13 @@
 
             <meta-data
                 android:name="android.app.default_searchable"
-                android:value="dev.dworks.apps.anexplorer.ExplorerActivity" />
+                android:value="dev.dworks.apps.anexplorer.pro.ExplorerActivity" />
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
         </activity>
 
         <!-- Setting -->
@@ -98,7 +106,7 @@
             android:label="Tutorial" />
 
         <receiver
-            android:name="dev.dworks.apps.anexplorer.pro.MyReceiver"
+            android:name="dev.dworks.apps.anexplorer.MyReceiver"
             android:enabled="true"
             android:exported="false" >
         </receiver>

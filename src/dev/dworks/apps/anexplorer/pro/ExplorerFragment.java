@@ -40,6 +40,11 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.util.LruCache;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.view.ActionMode;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.text.TextUtils;
 import android.text.format.Formatter;
 import android.util.SparseArray;
@@ -49,6 +54,9 @@ import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -66,15 +74,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.ActionMode;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.widget.SearchView;
-import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
-
 import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations;
 import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations.CmdListItem;
 import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations.FileComparator;
@@ -86,13 +85,14 @@ import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations.OnFragmentInteract
 import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations.SearchFilter;
 import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations.SortType;
 import dev.dworks.apps.anexplorer.pro.util.ExplorerOperations.TYPES;
-import dev.dworks.libs.actionbarplus.SherlockListPlusFragment;
+import dev.dworks.libs.actionbarplus.app.ActionBarListFragment;
+import dev.dworks.libs.actionbarplus.misc.Utils;
 
 /**
  * @author HaKr
  * 
  */
-public class ExplorerFragment extends SherlockListPlusFragment implements
+public class ExplorerFragment extends ActionBarListFragment implements
 		OnQueryTextListener, OnScrollListener, OnTouchListener {
 
 	//private static final String TAG = "Explorer";
@@ -108,9 +108,8 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 	public String[] newlist;
 
 	// file path and empty view
-	private RelativeLayout titlePane;
 	private TextView empty;
-	private TextView mypath;
+	//private TextView mypath;
 	private TextView selectCount, selectCount2;
 	private final String ROOT = "/";
 	private String incomingPath, currentPath, originalPath, searchOriginalPath;
@@ -231,6 +230,10 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 			args = getArguments();
 		}
 		super.onCreate(savedInstanceState);
+		context = getActionBarActivity();
+		// get preferences
+		preference = PreferenceManager.getDefaultSharedPreferences(context);
+		getSharedPreference();
 		initMode();
 		setHasOptionsMenu(true);
 	}
@@ -243,10 +246,6 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		view = inflater.inflate(R.layout.fragment_explorer, container, false);
-		context = this.getSherlockActivity();
-		// get preferences
-		preference = PreferenceManager.getDefaultSharedPreferences(context);
-		getSharedPreference();
 		fillBitmapCache();
 		initMode();
 		
@@ -499,7 +498,7 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 	}
 
 	private void setupActionBar() {
-		ActionBar actionBar = getSherlockActivity().getSupportActionBar();
+		ActionBar actionBar = getActionBarActivity().getSupportActionBar();
 
 		ViewGroup v = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.actionbar, null);
 		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM, ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -578,8 +577,6 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 	public void initControls() {
 		initData();
 		// ad
-		mypath = (TextView) view.findViewById(R.id.pathTitle);
-		titlePane = (RelativeLayout) view.findViewById(R.id.title_pane);
 		empty = (TextView) view.findViewById(R.id.internalEmpty);
 		gridView = (GridView) view.findViewById(R.id.grid_explorer);
 		listView_explorer = (ListView) view.findViewById(android.R.id.list);
@@ -666,33 +663,33 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 	}
 
 	public void show() {
-		getSherlockActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSherlockActivity().getSupportActionBar().setTitle(getTitle(mode));
+		getActionBarActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBarActivity().getSupportActionBar().setTitle(getTitle(mode));
 
 		switch (mode) {
 		case SearchMode:
 			search();
 			break;
 		case HideFromGalleryMode:
-			titlePane.setVisibility(View.GONE);
 			galleryTask = new GalleryTask();
 			galleryTask.execute("");
+			getActionBarActivity().getSupportActionBar().setSubtitle(null);
 			break;
 		case WallpaperMode:
 			multiSelectMode = true;
-			titlePane.setVisibility(View.GONE);
 			showList(incomingPath);
+			getActionBarActivity().getSupportActionBar().setSubtitle(null);
 			break;
 		case AppMode:
 			multiSelectMode = true;
-			titlePane.setVisibility(View.GONE);
 			showList(incomingPath);			
+			getActionBarActivity().getSupportActionBar().setSubtitle(null);
 			break;
 		case ProcessMode:
 			multiSelectMode = true;
-			titlePane.setVisibility(View.GONE);
 			fillProcessType();
-			showList(incomingPath);		
+			showList(incomingPath);
+			getActionBarActivity().getSupportActionBar().setSubtitle(null);
 			break;			
 		default:
 			showList(currentPath);
@@ -705,7 +702,7 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 	 */
 	public void search() {
 		fileListState = new ArrayList<Parcelable>();
-		mypath.setText(format2String(R.string.msg_search_results));
+		getActionBarActivity().getSupportActionBar().setSubtitle(format2String(R.string.msg_search_results));
 		incomingPath = TextUtils.isEmpty(incomingPath) ? ExplorerOperations.DIR_SDCARD : incomingPath; 
 		
 		searchTask = new SearchTask();
@@ -720,7 +717,7 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 	private void showList(String dirPath) {
 		loadList = true;
 		currentPath = dirPath;
-		mypath.setText(dirPath);
+		getActionBarActivity().getSupportActionBar().setSubtitle(dirPath);
 		mainFile = new File(dirPath);
 		curNavPosition = -1;
 
@@ -963,6 +960,9 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 				// Log.i(TAG, command);
 				// ExplorerOperations.runCommand("mount -o remount,rw "+currentPath);
 				// | awk '{print $1,\";\",$4,\";\",$5$6$7,\";\",$8}'
+				if(null == explorerOperationsSU){
+					explorerOperationsSU = new ExplorerOperations(runSU);
+				}
 				ArrayList<CmdListItem> result = explorerOperationsSU.runCommand(command);
 				// explorerOperationsSU.getRootDirListing();
 				if (result != null) {
@@ -1064,7 +1064,7 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 			menu_id = R.menu.options;
 			break;
 		}
-		getSherlockActivity().getSupportMenuInflater().inflate(menu_id, menu);
+		getActionBarActivity().getMenuInflater().inflate(menu_id, menu);
 
 		super.onCreateOptionsMenu(menu, inflater);
 	}
@@ -1075,41 +1075,46 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 		boolean nonExplorerMode = ExplorerOperations.isSpecialMode(mode);
 		boolean showOthers;
 		SearchView searchView;
-
+		MenuItem item;
 		switch (mode) {
 		case AppMode:
 			showMenuAppBackup = true;
 			showOthers = true;
-			searchView = new SearchView(getSherlockActivity().getSupportActionBar().getThemedContext());
+			searchView = new SearchView(getActionBarActivity().getSupportActionBar().getThemedContext());
 			searchView.setOnQueryTextListener(this);
 			searchView.setSubmitButtonEnabled(false);
 			searchView.setQueryHint("Filter Apps");
-			menu.findItem(R.id.menu_search).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
-			menu.findItem(R.id.menu_search).setActionView(searchView);
+			item = menu.findItem(R.id.menu_search);
+			MenuItemCompat.setShowAsAction(item, MenuItemCompat.SHOW_AS_ACTION_IF_ROOM | MenuItemCompat.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+			MenuItemCompat.setActionView(item, searchView);
+			
 			break;
 
 		case ProcessMode:
 			menu.findItem(R.id.menu_uninstall).setIcon(R.drawable.ic_menu_stop);
 			menu.findItem(R.id.menu_uninstall).setTitle("Stop process");
 			showOthers = true;
-			searchView = new SearchView(getSherlockActivity().getSupportActionBar().getThemedContext());
+			searchView = new SearchView(getActionBarActivity().getSupportActionBar().getThemedContext());
 			searchView.setOnQueryTextListener(this);
 			searchView.setSubmitButtonEnabled(false);
 			searchView.setQueryHint("Filter Processes");
-			menu.findItem(R.id.menu_search).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
-			menu.findItem(R.id.menu_search).setActionView(searchView);
+			item = menu.findItem(R.id.menu_search);
+			MenuItemCompat.setShowAsAction(item, MenuItemCompat.SHOW_AS_ACTION_IF_ROOM | MenuItemCompat.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+			MenuItemCompat.setActionView(item, searchView);
+			
 			break;
 
 		case HideFromGalleryMode:
 			menu.findItem(R.id.menu_uninstall).setIcon(R.drawable.ic_menu_unhide);
 			menu.findItem(R.id.menu_uninstall).setTitle("Unhide from Gallery");
 			showOthers = true;
-			searchView = new SearchView(getSherlockActivity().getSupportActionBar().getThemedContext());
+			searchView = new SearchView(getActionBarActivity().getSupportActionBar().getThemedContext());
 			searchView.setOnQueryTextListener(this);
 			searchView.setSubmitButtonEnabled(false);
 			searchView.setQueryHint("Filter Hidden Folders");
-			menu.findItem(R.id.menu_search).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
-			menu.findItem(R.id.menu_search).setActionView(searchView);
+			item = menu.findItem(R.id.menu_search);
+			MenuItemCompat.setShowAsAction(item, MenuItemCompat.SHOW_AS_ACTION_IF_ROOM | MenuItemCompat.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+			MenuItemCompat.setActionView(item, searchView);
 			break;
 
 		case WallpaperMode:
@@ -1128,12 +1133,13 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 			showSearchMenu = true;
 			showMenuAppBackup = false;
 			showOthers = false;
-			searchView = new SearchView(getSherlockActivity().getSupportActionBar().getThemedContext());
+			searchView = new SearchView(getActionBarActivity().getSupportActionBar().getThemedContext());
 			searchView.setOnQueryTextListener(this);
 			searchView.setSubmitButtonEnabled(true);
 			searchView.setQueryHint("Search Storage");
-			menu.findItem(R.id.menu_search).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
-			menu.findItem(R.id.menu_search).setActionView(searchView);
+			item = menu.findItem(R.id.menu_search);
+			MenuItemCompat.setActionView(item, searchView);
+			MenuItemCompat.setShowAsAction(item, MenuItemCompat.SHOW_AS_ACTION_IF_ROOM | MenuItemCompat.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 			menu.findItem(R.id.menu_view).setIcon(isCurrentList ? R.drawable.ic_menu_grid_view : R.drawable.ic_menu_list_view);
 			break;
 		}
@@ -1149,8 +1155,11 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 			// options menu
 			menu.findItem(R.id.menu_paste).setVisible(filesCopied);
 			MenuItem menuitem = menu.findItem(R.id.menu_create);
-			if(null != menuitem)
-				menuitem.setVisible(showSearchMenu ? !originalPath.equals(ROOT) : searchPathLock);
+			try {
+				if(null != menuitem)
+					menuitem.setVisible(showSearchMenu ? !originalPath.equals(ROOT) : searchPathLock);				
+			} catch (Exception e) {
+			}
 
 			menu.findItem(R.id.menu_search).setVisible(showSearchMenu);
 
@@ -1407,30 +1416,36 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 				new File(selectedFilePath + "/.nomedia").createNewFile();
 			} catch (IOException e) {
 			}
-			context.sendBroadcast(new Intent("android.intent.action.MEDIA_MOUNTED", Uri.fromFile(new File(selectedFilePath))));
 
-			MediaScannerConnection.scanFile(context, new String[] { new File(
-					selectedFilePath).getAbsolutePath() }, null,
-					new MediaScannerConnection.OnScanCompletedListener() {
-						@Override
-						public void onScanCompleted(String path, Uri uri) {
-							// Log.i("ExternalStorage", "Scanned " + path +
-							// ":");
-							// Log.i("ExternalStorage", "-> uri=" + uri);
-						}
-					});
+			if(Utils.hasKitKat()){
+				ExplorerOperations.scanDirKK(context, new File(selectedFilePath).getAbsolutePath());
+			}
+			else{
+				context.sendBroadcast(new Intent("android.intent.action.MEDIA_MOUNTED", Uri.fromFile(new File(selectedFilePath))));
+				MediaScannerConnection.scanFile(context, new String[] { new File(
+						selectedFilePath).getAbsolutePath() }, null,
+						new MediaScannerConnection.OnScanCompletedListener() {
+							@Override
+							public void onScanCompleted(String path, Uri uri) {
+							}
+						});
+			}
 			break;
 		case ExplorerOperations.CONTEXT_MENU_UNHIDE_FOLDER:
 			new File(selectedFilePath + "/.nomedia").delete();
-			context.sendBroadcast(new Intent("android.intent.action.MEDIA_MOUNTED", Uri.fromFile(new File(selectedFilePath))));
-
-			MediaScannerConnection.scanFile(context, new String[] { new File(selectedFilePath).toString() }, null,
-					new MediaScannerConnection.OnScanCompletedListener() {
-						@Override
-						public void onScanCompleted(String path, Uri uri) {
-							// Log.i("ExternalStorage", "-> uri=" + uri);
-						}
-					});
+			if(Utils.hasKitKat()){
+				ExplorerOperations.scanDirKK(context, new File(selectedFilePath).getAbsolutePath());
+			}
+			else{
+				context.sendBroadcast(new Intent("android.intent.action.MEDIA_MOUNTED", Uri.fromFile(new File(selectedFilePath))));
+	
+				MediaScannerConnection.scanFile(context, new String[] { new File(selectedFilePath).toString() }, null,
+						new MediaScannerConnection.OnScanCompletedListener() {
+							@Override
+							public void onScanCompleted(String path, Uri uri) {
+							}
+						});
+			}
 			break;
 		}
 
@@ -1923,7 +1938,7 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 			} else if (currentPath.compareTo(searchOriginalPath) == 0) {
 				// check if current path is search original path and if yes show
 				// search results and unlock search path
-				mypath.setText(format2String(R.string.msg_search_results) + ": " + resultCount + " files");
+				getActionBarActivity().getSupportActionBar().setSubtitle(format2String(R.string.msg_search_results) + ": " + resultCount + " files");
 				searchPathLock = false;
 				this.onConfigurationChanged(getResources().getConfiguration());
 				updateMenu();
@@ -2032,7 +2047,7 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 	}
 
 	private void updateMenu() {
-		getSherlockActivity().invalidateOptionsMenu();
+		getActionBarActivity().supportInvalidateOptionsMenu();
 	}
 
 	@TargetApi(Build.VERSION_CODES.GINGERBREAD)
@@ -2153,7 +2168,7 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 		if (actionMode != null) {
 			return;
 		}
-		actionMode = getSherlockActivity().startActionMode(actionModeCallback);
+		actionMode = getActionBarActivity().startSupportActionMode(actionModeCallback);
 	}
 
 	/**
@@ -2235,6 +2250,10 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 			title = format2String(R.string.name_wallpaper);
 			break;
 		default:
+			if(TextUtils.isEmpty(currentPath)){
+				title = format2String(R.string.name_explorer);
+				return title;
+			}
 			if (currentPath.compareTo(ExplorerOperations.DIR_ROOT) == 0) {
 				title = type == TYPES.Tablet ? format2String(R.string.name_tablet) : format2String(R.string.name_phone);
 			} else if (currentPath.compareTo(ExplorerOperations.DIR_SDCARD) == 0) {
@@ -2361,8 +2380,11 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 
 		@Override
 		protected void onPostExecute(File[] result) {
+			if(null == getView()){
+				return;
+			}
 			resultCount = String.valueOf(result.length);
-			mypath.setText(format2String(R.string.msg_search_results) + ": " + resultCount + " files");
+			getActionBarActivity().getSupportActionBar().setSubtitle(format2String(R.string.msg_search_results) + ": " + resultCount + " files");
 			setEmptyText(format2String(R.string.msg_file_not_found));
 			// show list
 			showList(result);
@@ -2385,8 +2407,11 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 
 		@Override
 		protected void onPostExecute(File[] result) {
+			if(null == getView()){
+				return;
+			}
 			resultCount = String.valueOf(result.length);
-			mypath.setText(format2String(R.string.msg_search_results) + ": " + resultCount + " files");
+			getActionBarActivity().getSupportActionBar().setSubtitle(format2String(R.string.msg_search_results) + ": " + resultCount + " files");
 			setEmptyText(format2String(R.string.msg_file_not_found));
 			// show list
 			showList(result);
@@ -2454,6 +2479,9 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 
 		@Override
 		protected void onPostExecute(Bitmap result) {
+			if(null == getView()){
+				return;
+			}
 			if (null != viewReference && null != result) {
 				final ViewHolder holder = viewReference.get();
 				if (null != holder && null != holder.fileIcon
@@ -2502,6 +2530,9 @@ public class ExplorerFragment extends SherlockListPlusFragment implements
 
 		@Override
 		protected void onPostExecute(String result) {
+			if(null == getView()){
+				return;
+			}
 			if (null != viewReference && null != result && result != "") {
 				final ViewHolder holder = viewReference.get();
 				if (showStorage) {

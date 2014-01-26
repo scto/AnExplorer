@@ -15,7 +15,7 @@
         android:visibility="gone" >
 
         <ProgressBar
-            style="@style/Widget.Sherlock.ProgressBar"
+            style="?attr/progressBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
@@ -44,8 +44,9 @@
                 android:id="@android:id/list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_centerInParent="true"
                 android:drawSelectorOnTop="false"
-                android:listSelector="@drawable/abs__list_selector_holo_dark"
+                android:listSelector="@drawable/abc_list_selector_holo_dark"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:scrollbarStyle="outsideOverlay"

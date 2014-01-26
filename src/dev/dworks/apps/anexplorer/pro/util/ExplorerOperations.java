@@ -28,6 +28,7 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.MemoryInfo;
@@ -68,6 +69,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.StatFs;
 import android.preference.PreferenceManager;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.text.format.Formatter;
 import android.util.Log;
@@ -662,7 +665,56 @@ public class ExplorerOperations {
 		
     	return fileType;
     }
-	
+
+	public static void scanDirKK(Context context, String path) {
+		try {
+			File payload = new File(path);
+			if (payload.isDirectory()) {
+				ScanTask task = new ScanTask(context);
+				task.execute(path);
+			} else
+				scanFile(context, new File(path));
+		} catch (Exception e) {
+		}
+	}
+
+	public static class ScanTask extends AsyncTask<String, String, String> {
+		private ProgressDialog waitDialog;
+		private Context context;
+		
+		public ScanTask(Context context) {
+			this.context = context;
+		}
+		
+		@Override
+		protected void onPreExecute() {
+			waitDialog = ProgressDialog.show(context, "","Working...");
+		}
+
+		@Override
+		protected String doInBackground(String... arg) {
+			try {
+				File[] dir = new File(arg[0]).listFiles();
+				for (File file : dir)
+					scanFile(context, file);
+			} catch (Exception e) {
+			}
+			return null;
+		}
+
+		@Override
+		public void onPostExecute(String result) {
+			if (waitDialog != null && waitDialog.isShowing())
+				waitDialog.dismiss();
+		}
+	}
+
+	private static void scanFile(Context context, File file) {
+		MediaScannerConnection.scanFile(context, new String[] { file.toString() }, null, new MediaScannerConnection.OnScanCompletedListener() {
+			public void onScanCompleted(String path, Uri uri) {
+			}
+		});
+	}
 	/**
 	 * @param file
 	 * @return
@@ -917,6 +969,7 @@ public class ExplorerOperations {
 				String[] trm = totrm[0].split(" ");
 				tm=Long.parseLong(trm[trm.length-1]);
 				tm=tm*1024;
+				reader.close();
 			} 
 			catch (IOException ex) {
 				ex.printStackTrace();
@@ -935,6 +988,7 @@ public class ExplorerOperations {
 	 * @param isTotal  The parameter for calculating total size
 	 * @return return Total Size when isTotal is {@value true} else return Free Size of Internal memory(data folder) 
 	 */	
+	@SuppressWarnings("deprecation")
 	public static Long getPartionSize(String path, boolean isTotal){
 		StatFs stat = null;
 		try {
@@ -1050,7 +1104,7 @@ public class ExplorerOperations {
 	    	  //FIXME OOM exception
 			wallpaperManager.setBitmap(BitmapFactory.decodeFile(path));
 			return true;
-		} catch (IOException e) { }
+		} catch (Exception e) { }
 	   /*      Bundle newExtras = new Bundle();
 	         newExtras.putString("circleCrop", "true");
 	         Intent cropIntent = new Intent();
@@ -1219,7 +1273,9 @@ public class ExplorerOperations {
 			intent = new Intent(Intent.ACTION_VIEW, Uri.fromFile(file));
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			intent.setComponent(new ComponentName("com.android.browser", "com.android.browser.BrowserActivity"));
-			context.startActivity(intent);
+			if(isIntentAvailable(context, intent)){
+				context.startActivity(intent);
+			}
 		}
 		else{
 	        intent = new Intent();
@@ -1284,6 +1340,7 @@ public class ExplorerOperations {
 	 * @return
 	 * @throws IOException
 	 */
+	@SuppressWarnings("resource")
 	public boolean unZipFile(String filePath, String newDirPath, String fileName) throws IOException{
 		File file2Extract = new File(filePath); 
 		File newDir2Extract;// = new File(newDirPath);
@@ -1318,6 +1375,7 @@ public class ExplorerOperations {
 			//Log.i(TAG, "count: "+count+" total: "+total);
 			newBackgroundWork.onProgressUpdate(count, total);
 		}
+		ZIS.close();
 		return false;
 	}
 	
@@ -1609,16 +1667,19 @@ public class ExplorerOperations {
 					return selectedFile.delete();
 				}
 				else{
-					String[] fileList = selectedFile.list();
-					for(String innerPaths : fileList){
-						File tempFile = new File(selectedFile.getAbsolutePath() + "/" + innerPaths);
-						if(tempFile.isFile()){
-							tempFile.delete();
-						}
-						else{
-							deleteFile(tempFile.getAbsolutePath(), runSU);
-							tempFile.delete();
-						}
+					try {
+						String[] fileList = selectedFile.list();
+						for(String innerPaths : fileList){
+							File tempFile = new File(selectedFile.getAbsolutePath() + "/" + innerPaths);
+							if(tempFile.isFile()){
+								tempFile.delete();
+							}
+							else{
+								deleteFile(tempFile.getAbsolutePath(), runSU);
+								tempFile.delete();
+							}
+						}						
+					} catch (Exception e) {
 					}
 					
 				}
@@ -1788,6 +1849,57 @@ public class ExplorerOperations {
 		}
 		return millisec;
 	}
+	@SuppressLint("ValidFragment")
+	public static class PropertiesFragment extends DialogFragment{
+		
+		private File newFile;
+
+		public PropertiesFragment() {
+		}
+		
+		public PropertiesFragment(File file) {
+            newFile  = file ;
+		}
+		
+		@Override
+		public void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
+			setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Light);
+		}
+		
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+			LayoutInflater factorys = LayoutInflater.from(context);
+            final View properiesView = factorys.inflate(R.layout.properties, null);
+
+            TextView commonView;
+            commonView = (TextView)properiesView.findViewById(R.id.name);
+            commonView.setText(newFile.getName());
+            commonView = (TextView)properiesView.findViewById(R.id.path);
+            commonView.setText(newFile.getPath());
+            commonView = (TextView)properiesView.findViewById(R.id.type);
+            commonView.setText(getMIMEType(newFile));
+            commonView = (TextView)properiesView.findViewById(R.id.totalFiles);
+            commonView.setText(newFile.exists() && newFile.isDirectory() ? null != newFile.list() ? String.valueOf(newFile.list().length) : "-" : "-");
+            commonView = (TextView)properiesView.findViewById(R.id.access);
+            commonView.setText(getFilePermissions(newFile));
+            commonView = (TextView)properiesView.findViewById(R.id.size);
+            commonView.setText(Formatter.formatShortFileSize(context,newFile.isDirectory() ? getDirectorySize(newFile) : newFile.length()));            
+            
+            Dialog dialog = new AlertDialog.Builder(context)
+     	   	.setIcon(R.drawable.ic_menu_info)
+     	   	.setTitle(format2String(R.string.msg_properties))            
+            .setView(properiesView)
+            .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                	dialog.cancel();
+                }
+            })
+            .create();
+            return dialog;
+		}
+	}
 
 	/**
 	 * @param id
@@ -1947,34 +2059,9 @@ public class ExplorerOperations {
     			Toast.makeText(context, format2String(R.string.msg_cant_select), Toast.LENGTH_SHORT).show();
     			return;
     		}
-            LayoutInflater factorys = LayoutInflater.from(context);
-            final View properiesView = factorys.inflate(R.layout.properties, null);
-            File newFile = new File(isMultiSelected ? filePathList[0] : filePath);
-            TextView commonView;
-            commonView = (TextView)properiesView.findViewById(R.id.name);
-            commonView.setText(newFile.getName());
-            commonView = (TextView)properiesView.findViewById(R.id.path);
-            commonView.setText(newFile.getPath());
-            commonView = (TextView)properiesView.findViewById(R.id.type);
-            commonView.setText(getMIMEType(newFile));
-            commonView = (TextView)properiesView.findViewById(R.id.totalFiles);
-            commonView.setText(newFile.exists() && newFile.isDirectory() ? null != newFile.list() ? String.valueOf(newFile.list().length) : "-" : "-");
-            commonView = (TextView)properiesView.findViewById(R.id.access);
-            commonView.setText(getFilePermissions(newFile));
-            commonView = (TextView)properiesView.findViewById(R.id.size);
-            commonView.setText(Formatter.formatShortFileSize(context,newFile.isDirectory() ? getDirectorySize(newFile) : newFile.length()));            
             
-            dialog = new AlertDialog.Builder(context)
-     	   	.setIcon(R.drawable.ic_menu_info)
-     	   	.setTitle(format2String(R.string.msg_properties))            
-            .setView(properiesView)
-            .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                	dialog.cancel();
-                }
-            })
-            .create();
-            dialog.show();            
+    		PropertiesFragment AboutFragment = new PropertiesFragment(new File(isMultiSelected ? filePathList[0] : filePath));
+    		AboutFragment.show(((ActionBarActivity)context).getSupportFragmentManager(), "about");
             break;    		
     		
     	case ExplorerOperations.DIALOG_ABOUT:
